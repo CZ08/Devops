@@ -24,7 +24,7 @@ pipeline {
         stage('Code Checkout') {
             steps {
                 git branch: 'main', 
-                    url: 'https://github.com/CZ08/Devops'
+                    url: 'https://github.com/CZ08/Devops.git'
             }
         }
 
