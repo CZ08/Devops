@@ -1,18 +1,11 @@
 pipeline {
     agent any
-    // Alternatively, you can specify a specific agent like this:
-    // agent {
-    //     node {
-    //         label 'build'
-    //     }
-    // }
 
     tools {
         maven 'M2_HOME'
     }
 
     options {
-        // Timeout counter starts after agent is allocated
         timeout(time: 10, unit: 'MINUTES')
     }
 
@@ -21,16 +14,17 @@ pipeline {
     }
 
     stages {
+
         stage('Code Checkout') {
             steps {
-                git branch: 'main', 
-                    url: 'https://github.com/CZ08/Devops.git'
+                git branch: 'main',
+                    url: 'https://github.com/CZ08/Devops'
             }
         }
 
         stage('Code Build') {
             steps {
-               sh 'mvn clean package'
+                sh 'mvn clean package'
             }
         }
     }
