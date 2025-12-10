@@ -5,26 +5,57 @@ pipeline {
         maven 'M2_HOME'
     }
 
-    options {
-        timeout(time: 10, unit: 'MINUTES')
+    environment {
+        APP_ENV    = "DEV"
+        IMAGE_NAME = "CZ08/Devops"
+        IMAGE_TAG  = "1.0.0"
     }
 
-    environment {
-        APP_ENV = "DEV"
+    options {
+        timeout(time: 15, unit: 'MINUTES')
     }
 
     stages {
 
-        stage('Code Checkout') {
+        stage('Build Maven') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/CZ08/Devops'
+                sh 'mvn clean package'
             }
         }
 
-        stage('Code Build') {
+        stage('SonarQube Analysis') {
+            environment {
+                SCANNER_HOME = tool 'SonarScanner'
+            }
             steps {
-                sh 'mvn clean package'
+                withSonarQubeEnv('MySonarServer') {   // même nom que dans la config Jenkins
+                    sh """
+                        ${SCANNER_HOME}/bin/sonar-scanner \
+                          -Dsonar.projectKey=devops-demo \
+                          -Dsonar.sources=src \
+                          -Dsonar.java.binaries=target
+                    """
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+            	sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
             }
         }
     }
