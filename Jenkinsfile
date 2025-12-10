@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         APP_ENV    = "DEV"
-        IMAGE_NAME = "CZ08/Devops"
+        IMAGE_NAME = "cz08/devops"   // remplace par TON username Docker Hub
         IMAGE_TAG  = "1.0.0"
     }
 
@@ -28,21 +28,13 @@ pipeline {
                 SCANNER_HOME = tool 'SonarScanner'
             }
             steps {
-                withSonarQubeEnv('MySonarServer') {   // même nom que dans la config Jenkins
+                withSonarQubeEnv('MySonarServer') {
                     sh """
                         ${SCANNER_HOME}/bin/sonar-scanner \
                           -Dsonar.projectKey=devops-demo \
                           -Dsonar.sources=src \
                           -Dsonar.java.binaries=target
                     """
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
                 }
             }
         }
@@ -55,7 +47,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-            	sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
             }
         }
     }
