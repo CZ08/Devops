@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         APP_ENV    = "DEV"
-        IMAGE_NAME = "cz08/devops"   // remplace par TON username Docker Hub
+        IMAGE_NAME = "cz08/alpine"
         IMAGE_TAG  = "1.0.0"
     }
 
