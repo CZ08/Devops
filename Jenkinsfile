@@ -32,7 +32,7 @@ pipeline {
                     sh """
                         ${SCANNER_HOME}/bin/sonar-scanner \
                           -Dsonar.projectKey=devops-demo \
-                          -Dsonar.sources=src \
+                          -Dsonar.sources=. \
                           -Dsonar.java.binaries=target
                     """
                 }
