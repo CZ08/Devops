@@ -40,17 +40,13 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build and push Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                sh "docker build -t cz08/devops-app:latest ."
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
-            }
-        }
+       
     }
 
     post {
