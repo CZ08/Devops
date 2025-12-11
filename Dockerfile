@@ -1,4 +1,4 @@
-FROM alpine:3.20
-RUN apk add --no-cache openjdk11
-EXPOSE 80
-CMD ["java"]
+FROM openjdk:8-jdk-alpine
+EXPOSE 8082
+ADD target/timesheet-devops-1.0.jar timesheet-devops-1.0.jar
+ENTRYPOINT ["java","-jar","/timesheet-devops-1.0.jar"]

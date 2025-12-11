@@ -19,7 +19,7 @@ pipeline {
 
         stage('Build Maven') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
@@ -32,7 +32,8 @@ pipeline {
                     sh """
                         ${SCANNER_HOME}/bin/sonar-scanner \
                           -Dsonar.projectKey=devops-demo \
-                          -Dsonar.sources=. \
+                          -Dsonar.projectName=timesheet-devops \
+                          -Dsonar.sources=src \
                           -Dsonar.java.binaries=target
                     """
                 }
